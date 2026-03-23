@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Health Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="icon">🏥</span>
+                <span class="brand-name">HealthWatch Dashboard</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="btn-nav">🏠 Home</a>
+                <a href="data-entry.html" class="btn-nav">📝 Data Entry</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="main-section">
+        <div class="container">
+            <h2 class="page-title">Health Monitoring Dashboard</h2>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid" id="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <p class="stat-label">Total Records</p>
+                        <p class="stat-value" id="total-records">0</p>
+                    </div>
+                    <div class="stat-icon">📄</div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-content">
+                        <p class="stat-label">Safe Areas</p>
+                        <p class="stat-value" id="safe-areas">0</p>
+                    </div>
+                    <div class="stat-icon">✅</div>
+                </div>
+
+                <div class="stat-card yellow">
+                    <div class="stat-content">
+                        <p class="stat-label">Medium Risk</p>
+                        <p class="stat-value" id="medium-risk">0</p>
+                    </div>
+                    <div class="stat-icon">⚠️</div>
+                </div>
+
+                <div class="stat-card red">
+                    <div class="stat-content">
+                        <p class="stat-label">High Risk</p>
+                        <p class="stat-value" id="high-risk">0</p>
+                    </div>
+                    <div class="stat-icon">🚨</div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Health Records</h3>
+                    <button onclick="loadData()" class="btn btn-secondary">
+                        <span>🔄</span> Refresh
+                    </button>
+                </div>
+
+                <div id="table-container">
+                    <!-- Table will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- High Risk Alert -->
+            <div id="high-risk-alert" class="alert-box" style="display: none;">
+                <div class="alert-content">
+                    <div class="alert-icon">🚨</div>
+                    <div>
+                        <h4>High Risk Alert!</h4>
+                        <p id="alert-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Load dashboard data when page loads (and enforce session auth).
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/me');
+                if (!response.ok) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (e) {
+                // If the server is unreachable, let loadData handle the error UI.
+            }
+            loadData();
+        });
+    </script>
+</body>
+</html>

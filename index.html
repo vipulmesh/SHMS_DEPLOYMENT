@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Health Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="icon">🏥</span>
+                <span class="brand-name">HealthWatch</span>
+            </div>
+            <div class="nav-links">
+                <a href="login.html" class="btn-nav">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Smart Community Health Monitoring System</h1>
+            <p class="hero-subtitle">Early Warning System for Water-Borne Diseases in Rural Areas</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card" onclick="openModal('disease')">
+                    <div class="feature-icon blue">💧</div>
+                    <h3>Disease Tracking</h3>
+                    <p>Monitor diarrhea, fever, and other water-borne disease cases in rural communities</p>
+                </div>
+                <div class="feature-card" onclick="openModal('warning')">
+                    <div class="feature-icon green">⚠️</div>
+                    <h3>Early Warning</h3>
+                    <p>Risk assessment alerts health workers to potential outbreaks using WHO Standards</p>
+                </div>
+                <div class="feature-card" onclick="openModal('analysis')">
+                    <div class="feature-icon purple">📊</div>
+                    <h3>Data Analysis</h3>
+                    <p>Visual dashboards help identify patterns and make informed decisions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-card">
+                <h2>Get Started</h2>
+                <div class="cta-buttons">
+                    <a href="login.html" class="btn btn-primary">
+                        <span>➕</span> Enter Health Data
+                    </a>
+                    <a href="login.html" class="btn btn-success">
+                        <span>📊</span> View Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-card">
+                <h3>About This System</h3>
+                <p>This Smart Community Health Monitoring System is designed to help rural health workers track and predict water-borne disease outbreaks. The system uses a rule-based AI algorithm to assess risk levels based on disease cases and environmental factors like rainfall.</p>
+                <div class="about-grid">
+                    <div>
+                        <h4>Technology Stack:</h4>
+                        <ul>
+                            <li>Frontend: HTML5, CSS3, JavaScript</li>
+                            <li>Backend: Python Flask</li>
+                            <li>Database: SQLite</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>Manual data entry by health workers</li>
+                            <li>Rule-based risk prediction</li>
+                            <li>Visual dashboard with alerts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; Piyush Chaudhari , Pranav Gawade , Sujan Kamble & Sarthak Sagare</p>
+        </div>
+    </footer>
+
+    <!-- Feature Modal -->
+    <div id="featureModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalIcon" class="feature-icon" style="margin: 0 auto 1rem auto; width: 80px; height: 80px; font-size: 2.5rem;"></div>
+            <h2 id="modalTitle">Feature Title</h2>
+            <p id="modalDesc">Detailed description goes here...</p>
+            <div id="modalDetails" class="modal-details">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const featureData = {
+            disease: {
+                title: "Disease Tracking",
+                icon: "💧",
+                iconClass: "blue",
+                desc: "Monitor diarrhea, fever, and other water-borne disease cases in rural communities",
+                details: "<ul><li>Real-time tracking of reported cases.</li><li>Geographic mapping of disease hotspots.</li><li>Historical data analysis for seasonal trends.</li></ul>"
+            },
+            warning: {
+                title: "Early Warning",
+                icon: "⚠️",
+                iconClass: "green",
+                desc: "Risk assessment alerts health workers to potential outbreaks using WHO Standards",
+                details: "<ul><li>Automated alert generation based on predefined thresholds.</li><li>SMS/Email notifications to localized health workers.</li><li>Integration with weather data like rainfall and temperature.</li></ul>"
+            },
+            analysis: {
+                title: "Data Analysis",
+                icon: "📊",
+                iconClass: "purple",
+                desc: "Visual dashboards help identify patterns and make informed decisions",
+                details: "<ul><li>Interactive charts and graphs for clear insights.</li><li>Exportable reports for regional authorities.</li><li>Predictive modeling capabilities to anticipate future outbreaks.</li></ul>"
+            }
+        };
+
+        function openModal(featureId) {
+            const modal = document.getElementById('featureModal');
+            const data = featureData[featureId];
+            
+            if(data) {
+                document.getElementById('modalTitle').innerText = data.title;
+                const iconEl = document.getElementById('modalIcon');
+                iconEl.innerText = data.icon;
+                iconEl.className = 'feature-icon ' + data.iconClass; 
+                document.getElementById('modalDesc').innerText = data.desc;
+                document.getElementById('modalDetails').innerHTML = data.details;
+                
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('featureModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('featureModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
