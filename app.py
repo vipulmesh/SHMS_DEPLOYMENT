@@ -7,30 +7,31 @@ from flask import Flask, abort, send_from_directory
 from backend.db import DatabaseError, init_database
 from backend.routes import api as api_blueprint
 
-
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
 
-# Load environment variables from .env (Render also sets env vars directly).
+# Load environment variables
 load_dotenv()
 
 
 def create_app() -> Flask:
     # ===========================
+    # BASE DIRECTORY (IMPORTANT FIX)
+    # ===========================
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+    # ===========================
     # FLASK APP INITIALIZATION
     # ===========================
-    app = Flask(__name__, static_folder=".")
+    app = Flask(__name__, static_folder=BASE_DIR)
 
     # ===========================
     # CONFIG
     # ===========================
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(BASE_DIR, "database.db")
-    # Optional override for Render persistent storage setups.
     db_path = os.environ.get("DATABASE_PATH", db_path)
 
     secret_key = os.environ.get("FLASK_SECRET_KEY")
     if not secret_key:
-        # Avoid hardcoding a secret. This will invalidate sessions on every restart.
         secret_key = os.urandom(24).hex()
         logging.warning(
             "FLASK_SECRET_KEY is not set; using a temporary key (sessions will not persist)."
@@ -45,14 +46,12 @@ def create_app() -> Flask:
     )
 
     # ===========================
-    # DATABASE INIT (Gunicorn-safe)
+    # DATABASE INIT
     # ===========================
     try:
         init_database(app.config["DATABASE_PATH"])
         logging.info("SQLite initialized/verified.")
     except DatabaseError as e:
-        # Don't crash the whole service if DB can't be created at import time.
-        # Endpoints will return errors when the DB is unavailable.
         logging.exception("Database initialization failed: %s", e)
 
     # ===========================
@@ -61,12 +60,15 @@ def create_app() -> Flask:
     app.register_blueprint(api_blueprint)
 
     # ===========================
-    # STATIC + FRONTEND
+    # FRONTEND ROUTE (FIXED)
     # ===========================
     @app.route("/")
     def index():
-        return send_from_directory(".", "index.html")
+        return send_from_directory(BASE_DIR, "index.html")
 
+    # ===========================
+    # STATIC FILES ROUTE (FIXED)
+    # ===========================
     ALLOWED_STATIC_EXTENSIONS = {
         ".html",
         ".css",
@@ -87,7 +89,6 @@ def create_app() -> Flask:
 
     @app.route("/<path:filename>")
     def static_files(filename: str):
-        # Prevent the wildcard static route from capturing API endpoints.
         if filename.startswith("api/"):
             abort(404)
 
@@ -95,8 +96,7 @@ def create_app() -> Flask:
         if ext not in ALLOWED_STATIC_EXTENSIONS:
             abort(404)
 
-        # Serve only files that exist in the project root.
-        return send_from_directory(".", filename)
+        return send_from_directory(BASE_DIR, filename)
 
     return app
 
@@ -104,7 +104,9 @@ def create_app() -> Flask:
 app = create_app()
 
 
-# Local dev server only. Render/Gunicorn will use `Procfile` (`gunicorn app:app`).
+# ===========================
+# LOCAL RUN
+# ===========================
 if __name__ == "__main__":
     host = "0.0.0.0"
     port = int(os.environ.get("PORT", 5000))
